@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import * as actions from '../../../store/actions';
 import { LANGUAGES } from '../../../utils';
+import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 function OutStandingDoctor({
     settings,
     language,
     loadTopDoctors,
     topDoctorsRedux,
+    history,
 }) {
     const [arrDoctors, setArrDoctors] = useState([]);
 
@@ -21,8 +23,12 @@ function OutStandingDoctor({
         setArrDoctors(topDoctorsRedux);
     }, [topDoctorsRedux]);
 
+    const handleViewDetailDoctor = (item) => {
+        console.log('view detail: ', item);
+        history.push(`/detail-doctor/${item.id}`);
+    };
+
     let allDoctors = arrDoctors;
-    console.log('check state arrdoctors', allDoctors);
     return (
         <div className="section-share section-outstanding-doctor">
             <div className="section-container">
@@ -52,6 +58,9 @@ function OutStandingDoctor({
                                     <div
                                         className="section-customize"
                                         key={index}
+                                        onClick={() =>
+                                            handleViewDetailDoctor(item)
+                                        }
                                     >
                                         <div className="customize-border">
                                             <div className="outer-bg">
@@ -95,4 +104,6 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OutStandingDoctor);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(OutStandingDoctor),
+);

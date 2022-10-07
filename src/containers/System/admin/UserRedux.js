@@ -179,7 +179,6 @@ function UserRedux({
             userEditId: user.id,
         });
     };
-    console.log(state.actions);
     return (
         <div className="user-redux-container">
             <div className="title">User Redux with Thanh Hoa</div>

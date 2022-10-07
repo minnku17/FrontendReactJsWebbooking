@@ -41,7 +41,6 @@ function TableManageUser({
     const handleEditUser = (user) => {
         handleEditUserFromParentKey(user);
     };
-    console.log(usersRedux);
     return (
         <React.Fragment>
             <table id="TableManageUser">
