@@ -8,7 +8,8 @@ import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import Select from 'react-select';
-import { LANGUAGES } from '../../../utils';
+import { CRUD_ACTIONS, LANGUAGES } from '../../../utils';
+import { getDetailInfoDoctor } from '../../../services/userService';
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -23,6 +24,7 @@ function ManageDoctor({
     const [contentHTML, setContentHTML] = useState('');
     const [description, setDescription] = useState('');
     const [listDoctors, setListDoctors] = useState([]);
+    const [hasOldData, setHasOldData] = useState(false);
 
     useEffect(() => {
         fetchAllDoctors();
@@ -32,7 +34,6 @@ function ManageDoctor({
         let dataSelect = buildDataInputSelect(allDoctors);
         setListDoctors(dataSelect);
     }, [allDoctors, language]);
-    console.log('Check state doctors: ', listDoctors);
 
     const buildDataInputSelect = (inputData) => {
         let result = [];
@@ -61,16 +62,35 @@ function ManageDoctor({
             contentMarkdown: contentMarkdown,
             description: description,
             doctorId: selectedDoctor.value,
+            action:
+                hasOldData === true ? CRUD_ACTIONS.EDIT : CRUD_ACTIONS.CREATE,
         });
     };
 
-    const handleChange = (selectedDoctor) => {
+    const handleChange = async (selectedDoctor) => {
         setSelectedDoctor(selectedDoctor);
-        console.log(`Option selected:`, selectedDoctor);
+
+        let res = await getDetailInfoDoctor(selectedDoctor.value);
+
+        if (res && res.errCode === 0 && res.data && res.data.Markdown) {
+            let markdown = res.data.Markdown;
+            setContentHTML(markdown.contentHTML);
+            setContentMarkdown(markdown.contentMarkdown);
+            setDescription(markdown.description);
+            setHasOldData(true);
+        } else {
+            setContentHTML('');
+            setContentMarkdown('');
+            setDescription('');
+            setHasOldData(false);
+        }
+        console.log(res);
+        // if(res && res.)
     };
     const handleOnChangeDesc = (e) => {
         setDescription(e.target.value);
     };
+    console.log(selectedDoctor);
     return (
         <div className="manage-doctor-container">
             <div className="manage-doctor-title">Tạo thêm thông tin doctor</div>
@@ -100,13 +120,22 @@ function ManageDoctor({
                     style={{ height: '500px' }}
                     renderHTML={(text) => mdParser.render(text)}
                     onChange={handleEditorChange}
+                    value={contentMarkdown}
                 />
             </div>
             <button
-                className="save-content-doctor"
+                className={
+                    hasOldData === true
+                        ? 'save-content-doctor'
+                        : 'create-content-doctor'
+                }
                 onClick={() => handleSaveContentMarkdown()}
             >
-                Lưu thông tin
+                {hasOldData === true ? (
+                    <span>Lưu thông tin</span>
+                ) : (
+                    <span>Tạo thông tin</span>
+                )}
             </button>
         </div>
     );

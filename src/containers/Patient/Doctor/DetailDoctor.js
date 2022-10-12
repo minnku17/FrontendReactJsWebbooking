@@ -6,6 +6,7 @@ import './DetailDoctor.scss';
 import { getDetailInfoDoctor } from '../../../services/userService';
 import { useState } from 'react';
 import { LANGUAGES } from '../../../utils';
+import DoctorSchedule from './DoctorSchedule';
 
 function DetailDoctor({ match, language }) {
     const [detailDoctor, setDetailDoctor] = useState({});
@@ -48,7 +49,18 @@ function DetailDoctor({ match, language }) {
                         </div>
                     </div>
                 </div>
-                <div className="schedule-doctor"></div>
+                <div className="schedule-doctor">
+                    <div className="content-left">
+                        <DoctorSchedule
+                            doctorIdFromParent={
+                                detailDoctor && detailDoctor.id
+                                    ? detailDoctor.id
+                                    : -1
+                            }
+                        />
+                    </div>
+                    <div className="content-right"></div>
+                </div>
                 <div className="detail-info-doctor">
                     {detailDoctor &&
                         detailDoctor.Markdown &&
