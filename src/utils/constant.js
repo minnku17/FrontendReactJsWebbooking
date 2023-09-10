@@ -5,6 +5,8 @@ export const path = {
     LOG_OUT: '/logout',
     SYSTEM: '/system',
     DETAIL_DOCTOR: '/detail-doctor/:id',
+    DETAIL_SPECIALTY: '/detail-specialty/:id',
+    VERIFY_EMAIL_BOOKING: '/verify-booking',
 };
 
 export const LANGUAGES = {
@@ -28,7 +30,7 @@ export const YesNoObj = {
     NO: 'N',
 };
 export const USER_ROLE = {
-    ADMIN: 'R1',
+    ADMIN: 'R',
     DOCTOR: 'R2',
     PATIENT: 'R3',
 };

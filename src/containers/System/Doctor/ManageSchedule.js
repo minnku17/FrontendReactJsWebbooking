@@ -111,10 +111,14 @@ function ManageSchedule({
             date: formatedDate,
         });
 
-        console.log(res);
-
-        console.log(result);
+        if (res && res.errCode === 0) {
+            toast.success('Save completed successfully');
+        } else {
+            toast.error('error save schedule');
+        }
     };
+
+    let yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
     return (
         <>
             <div className="manage-schedule-container">
@@ -141,7 +145,7 @@ function ManageSchedule({
                                 className="form-control"
                                 onChange={handleOnChangeDatePicker}
                                 value={currentDate}
-                                minDate={new Date()}
+                                minDate={yesterday}
                             />
                         </div>
                         <div className="col-12 pick-hour-container">

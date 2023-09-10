@@ -7,18 +7,21 @@ import { getDetailInfoDoctor } from '../../../services/userService';
 import { useState } from 'react';
 import { LANGUAGES } from '../../../utils';
 import DoctorSchedule from './DoctorSchedule';
+import DoctorExtraInfo from './DoctorExtraInfo';
 
 function DetailDoctor({ match, language }) {
     const [detailDoctor, setDetailDoctor] = useState({});
 
-    useEffect(async () => {
-        if (match && match.params && match.params.id) {
-            let id = match.params.id;
-            let res = await getDetailInfoDoctor(id);
-            if (res && res.errCode === 0) {
-                setDetailDoctor(res.data);
+    useEffect(() => {
+        const fecthApi = async () => {
+            if (match && match.params && match.params.id) {
+                let id = match.params.id;
+                let res = await getDetailInfoDoctor(id);
+                if (res && res.errCode === 0) {
+                    setDetailDoctor(res.data);
+                }
             }
-        }
+        };
     }, []);
     let nameVi = '',
         nameEn = '';
@@ -26,14 +29,13 @@ function DetailDoctor({ match, language }) {
         nameVi = `${detailDoctor.positionData.valueVi}, ${detailDoctor.lastName} ${detailDoctor.firstName}`;
         nameEn = `${detailDoctor.positionData.valueEn}, ${detailDoctor.firstName} ${detailDoctor.lastName}`;
     }
-    console.log('check state doctor: ', detailDoctor);
     return (
         <>
             <HomeHeader isShowBanner={false} />
             <div className="doctor-detail-container ">
                 <div className="intro-doctor">
                     <div className="content-left">
-                        <img src={detailDoctor.image} />
+                        <img src={detailDoctor.image} alt="" />
                     </div>
                     <div className="content-right">
                         <div className="up">
@@ -51,15 +53,11 @@ function DetailDoctor({ match, language }) {
                 </div>
                 <div className="schedule-doctor">
                     <div className="content-left">
-                        <DoctorSchedule
-                            doctorIdFromParent={
-                                detailDoctor && detailDoctor.id
-                                    ? detailDoctor.id
-                                    : -1
-                            }
-                        />
+                        <DoctorSchedule />
                     </div>
-                    <div className="content-right"></div>
+                    <div className="content-right">
+                        <DoctorExtraInfo />
+                    </div>
                 </div>
                 <div className="detail-info-doctor">
                     {detailDoctor &&
